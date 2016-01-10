@@ -112,3 +112,13 @@ colnames(act_max )[2] <- "Highest Average Step"
 
 print(act_max)
 ```
+
+### 6. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+```{r, echo=TRUE}
+act_order <- act_avg_by_interval[order(act_avg_by_interval[,2]),]
+
+thecount <- nrow(activitydata[which(is.na(activitydata$steps) == TRUE), ])
+
+print(thecount)
+```
+

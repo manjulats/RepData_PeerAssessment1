@@ -234,3 +234,13 @@
 
     ##     Interval Highest Average Step
     ## 104      835             206.1698
+
+### 6. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+
+    act_order <- act_avg_by_interval[order(act_avg_by_interval[,2]),]
+
+    thecount <- nrow(activitydata[which(is.na(activitydata$steps) == TRUE), ])
+
+    print(thecount)
+
+    ## [1] 2304

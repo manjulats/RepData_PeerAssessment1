@@ -293,6 +293,15 @@ print(act_max)</code></pre>
 <pre><code>##     Interval Highest Average Step
 ## 104      835             206.1698</code></pre>
 </div>
+<div id="calculate-and-report-the-total-number-of-missing-values-in-the-dataset-i.e.the-total-number-of-rows-with-nas" class="section level3">
+<h3>6. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)</h3>
+<pre class="r"><code>act_order &lt;- act_avg_by_interval[order(act_avg_by_interval[,2]),]
+
+thecount &lt;- nrow(activitydata[which(is.na(activitydata$steps) == TRUE), ])
+
+print(thecount)</code></pre>
+<pre><code>## [1] 2304</code></pre>
+</div>
 
 
 </div>
