@@ -196,3 +196,41 @@
                     main="Median of Steps taken each Day")
 
 ![](PA1_template_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+### 4. Time series plot of the average number of steps taken
+
+    ## Load plyr Package
+        library(plyr)
+        library(ggplot2)
+
+    ## Warning: package 'ggplot2' was built under R version 3.2.3
+
+    ## Group by the date and then find the median of the steps
+      act_avg_by_interval <- ddply(activitydata, "interval", summarise, mean(steps,na.rm=TRUE))
+      colnames(act_avg_by_interval )[2] <- "AverageSteps"
+      
+    ## Finding the range for interval
+        int_range <- range(0,  act_avg_by_interval$interval)
+
+    ## Plot the Graph (Base Plotting System)
+        ThePlot <- qplot(interval, AverageSteps, data=act_avg_by_interval,
+              geom="line", method="lm",xlab="Interval", ylab="Average of Steps", 
+                    main="Average of Steps taken per interval", xlim=int_range)
+        
+        ## Printing the Plot
+        print(ThePlot)
+
+![](PA1_template_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+### 5. The 5-minute interval that, on average, contains the maximum number of steps
+
+    act_order <- act_avg_by_interval[order(act_avg_by_interval[,2]),]
+
+    act_max <- tail(act_order,1)
+    colnames(act_max )[1] <- "Interval"
+    colnames(act_max )[2] <- "Highest Average Step" 
+
+    print(act_max)
+
+    ##     Interval Highest Average Step
+    ## 104      835             206.1698
