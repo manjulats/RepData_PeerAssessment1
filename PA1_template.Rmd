@@ -2,7 +2,7 @@
 title: 'Assignment : Course Project 1'
 author: "Manjula T"
 date: "January 10, 2016"
-output: html_document
+output: md_document
 ---
 
 ### 1. Code for reading in the dataset and/or processing the data
