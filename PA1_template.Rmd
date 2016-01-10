@@ -5,44 +5,76 @@ date: "January 10, 2016"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+### 1. Code for reading in the dataset and/or processing the data
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
+```{r, echo=TRUE}
 if(!file.exists("data"))  {
 	dir.create("data")
 }
 
-setwd("./data")
-
-if(!file.exists("repdatadataactivity.zip"))  {
+if(!file.exists("./data/repdatadataactivity.zip"))  {
 	zipFileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip?accessType=DOWNLOAD"
-	download.file(zipFileUrl, destfile="repdatadataactivity.zip")
+	download.file(zipFileUrl, destfile="./data/repdatadataactivity.zip")
 }
 
-if(!file.exists("activity.csv")) {
+if(!file.exists("./data/activity.csv")) {
 	## check and correct the code to unzip
-	unzip("./repdatadataactivity.zip", list=FALSE, overwrite=TRUE, exdir=".")
+	unzip("./data/repdatadataactivity.zip", list=FALSE, overwrite=TRUE, exdir=".")
 }
 
-activitydata <- read.csv("activity.csv")
+activitydata <- read.csv("./data/activity.csv")
 
 ```
 
-You can also embed plots, for example:
 
-```{r, echo=FALSE}
-## Group by the day and then total the steps
-	act_group <- group_by(activitydata, date)
-	act_by_date <- summarize(act_group, sum(steps))
-	colnames(act_by_date )[2] <- "TotalSteps"
+### 2.Histogram of the total number of steps taken each day
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
 
-## Plot the Graph (Base Plotting System)
-	hist(act_by_date$TotalSteps, 
-				xlab="Total Number of Steps", ylab="Total Steps",
+## Group by the date and then sum the steps
+  act_sum_by_date <- ddply(activitydata, "date", summarise, TotalSteps=sum(steps))
+
+## Plot the histogram 
+	hist(act_sum_by_date$TotalSteps, 
+				xlab="Total Number of Steps",
 				main="Histogram of Total Number of Steps taken each Day")
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### 3.Mean and median number of steps taken each day
+### MEAN
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
+
+## Group by the date and then find mean of the steps
+  act_mean_by_date <- ddply(activitydata, "date", summarise, MeanSteps=mean(steps))
+	
+## Print the means
+  print(act_mean_by_date)
+
+## Plot the Graph (Base Plotting System)
+	plot(act_mean_by_date$date, act_mean_by_date$MeanSteps, 
+				type="l", xlab="Date", ylab="Mean of Steps",
+				main="Mean of Steps taken each Day")
+
+```
+
+### MEDIAN
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
+
+## Group by the date and then find the median of the steps
+  act_median_by_date <- ddply(activitydata, "date", summarise, MedianSteps=median(steps))
+  
+## Print the medians
+  print(act_median_by_date)
+
+## Plot the Graph (Base Plotting System)
+	plot(act_median_by_date$date, act_median_by_date$MedianSteps, 
+				type="l", xlab="Date", ylab="Median of Steps",
+				main="Median of Steps taken each Day")
+
+```
