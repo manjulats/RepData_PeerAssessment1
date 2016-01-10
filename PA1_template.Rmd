@@ -1,25 +1,48 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: 'Assignment : Course Project 1'
+author: "Manjula T"
+date: "January 10, 2016"
+output: html_document
 ---
 
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-## Loading and preprocessing the data
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
+```{r}
+if(!file.exists("data"))  {
+	dir.create("data")
+}
 
+setwd("./data")
 
-## What is mean total number of steps taken per day?
+if(!file.exists("repdatadataactivity.zip"))  {
+	zipFileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip?accessType=DOWNLOAD"
+	download.file(zipFileUrl, destfile="repdatadataactivity.zip")
+}
 
+if(!file.exists("activity.csv")) {
+	## check and correct the code to unzip
+	unzip("./repdatadataactivity.zip", list=FALSE, overwrite=TRUE, exdir=".")
+}
 
+activitydata <- read.csv("activity.csv")
 
-## What is the average daily activity pattern?
+```
 
+You can also embed plots, for example:
 
+```{r, echo=FALSE}
+## Group by the day and then total the steps
+	act_group <- group_by(activitydata, date)
+	act_by_date <- summarize(act_group, sum(steps))
+	colnames(act_by_date )[2] <- "TotalSteps"
 
-## Imputing missing values
+## Plot the Graph (Base Plotting System)
+	hist(act_by_date$TotalSteps, 
+				xlab="Total Number of Steps", ylab="Total Steps",
+				main="Histogram of Total Number of Steps taken each Day")
 
+```
 
-
-## Are there differences in activity patterns between weekdays and weekends?
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
