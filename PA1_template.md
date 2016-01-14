@@ -10,7 +10,7 @@
     }
 
     if(!file.exists("./data/activity.csv")) {
-        ## check and correct the code to unzip
+        ## code to unzip
         unzip("./data/repdatadataactivity.zip", list=FALSE, overwrite=TRUE, exdir=".")
     }
 
@@ -35,184 +35,40 @@
 
 ### 3.Mean and median number of steps taken each day
 
-### MEAN
-
     ## Load plyr Package
         library(plyr)
 
-    ## Group by the date and then find mean of the steps
-      act_mean_by_date <- ddply(activitydata, "date", summarise, MeanSteps=mean(steps))
-        
-    ## Print the means
-      print(act_mean_by_date)
+    ## Use Summary to Calculate the Mean and Median 
+    ## Print the Mean and Median
+      stepssummary <- summary(act_sum_by_date[,2])
+      stepsmean <- stepssummary[4]
+      stepsmedian <- stepssummary[3]
+      print(stepsmean)
 
-    ##          date  MeanSteps
-    ## 1  2012-10-01         NA
-    ## 2  2012-10-02  0.4375000
-    ## 3  2012-10-03 39.4166667
-    ## 4  2012-10-04 42.0694444
-    ## 5  2012-10-05 46.1597222
-    ## 6  2012-10-06 53.5416667
-    ## 7  2012-10-07 38.2465278
-    ## 8  2012-10-08         NA
-    ## 9  2012-10-09 44.4826389
-    ## 10 2012-10-10 34.3750000
-    ## 11 2012-10-11 35.7777778
-    ## 12 2012-10-12 60.3541667
-    ## 13 2012-10-13 43.1458333
-    ## 14 2012-10-14 52.4236111
-    ## 15 2012-10-15 35.2048611
-    ## 16 2012-10-16 52.3750000
-    ## 17 2012-10-17 46.7083333
-    ## 18 2012-10-18 34.9166667
-    ## 19 2012-10-19 41.0729167
-    ## 20 2012-10-20 36.0937500
-    ## 21 2012-10-21 30.6284722
-    ## 22 2012-10-22 46.7361111
-    ## 23 2012-10-23 30.9652778
-    ## 24 2012-10-24 29.0104167
-    ## 25 2012-10-25  8.6527778
-    ## 26 2012-10-26 23.5347222
-    ## 27 2012-10-27 35.1354167
-    ## 28 2012-10-28 39.7847222
-    ## 29 2012-10-29 17.4236111
-    ## 30 2012-10-30 34.0937500
-    ## 31 2012-10-31 53.5208333
-    ## 32 2012-11-01         NA
-    ## 33 2012-11-02 36.8055556
-    ## 34 2012-11-03 36.7048611
-    ## 35 2012-11-04         NA
-    ## 36 2012-11-05 36.2465278
-    ## 37 2012-11-06 28.9375000
-    ## 38 2012-11-07 44.7326389
-    ## 39 2012-11-08 11.1770833
-    ## 40 2012-11-09         NA
-    ## 41 2012-11-10         NA
-    ## 42 2012-11-11 43.7777778
-    ## 43 2012-11-12 37.3784722
-    ## 44 2012-11-13 25.4722222
-    ## 45 2012-11-14         NA
-    ## 46 2012-11-15  0.1423611
-    ## 47 2012-11-16 18.8923611
-    ## 48 2012-11-17 49.7881944
-    ## 49 2012-11-18 52.4652778
-    ## 50 2012-11-19 30.6979167
-    ## 51 2012-11-20 15.5277778
-    ## 52 2012-11-21 44.3993056
-    ## 53 2012-11-22 70.9270833
-    ## 54 2012-11-23 73.5902778
-    ## 55 2012-11-24 50.2708333
-    ## 56 2012-11-25 41.0902778
-    ## 57 2012-11-26 38.7569444
-    ## 58 2012-11-27 47.3819444
-    ## 59 2012-11-28 35.3576389
-    ## 60 2012-11-29 24.4687500
-    ## 61 2012-11-30         NA
+    ##  Mean 
+    ## 10770
 
-    ## Plot the Graph (Base Plotting System)
-        plot(act_mean_by_date$date, act_mean_by_date$MeanSteps, 
-                    type="l", xlab="Date", ylab="Mean of Steps",
-                    main="Mean of Steps taken each Day")
+      print(stepsmedian)
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+    ## Median 
+    ##  10760
 
-### MEDIAN
+### 4.Time series plot of the average number of steps taken
 
-    ## Load plyr Package
-        library(plyr)
-
-    ## Group by the date and then find the median of the steps
-      act_median_by_date <- ddply(activitydata, "date", summarise, MedianSteps=median(steps))
-      
-    ## Print the medians
-      print(act_median_by_date)
-
-    ##          date MedianSteps
-    ## 1  2012-10-01          NA
-    ## 2  2012-10-02           0
-    ## 3  2012-10-03           0
-    ## 4  2012-10-04           0
-    ## 5  2012-10-05           0
-    ## 6  2012-10-06           0
-    ## 7  2012-10-07           0
-    ## 8  2012-10-08          NA
-    ## 9  2012-10-09           0
-    ## 10 2012-10-10           0
-    ## 11 2012-10-11           0
-    ## 12 2012-10-12           0
-    ## 13 2012-10-13           0
-    ## 14 2012-10-14           0
-    ## 15 2012-10-15           0
-    ## 16 2012-10-16           0
-    ## 17 2012-10-17           0
-    ## 18 2012-10-18           0
-    ## 19 2012-10-19           0
-    ## 20 2012-10-20           0
-    ## 21 2012-10-21           0
-    ## 22 2012-10-22           0
-    ## 23 2012-10-23           0
-    ## 24 2012-10-24           0
-    ## 25 2012-10-25           0
-    ## 26 2012-10-26           0
-    ## 27 2012-10-27           0
-    ## 28 2012-10-28           0
-    ## 29 2012-10-29           0
-    ## 30 2012-10-30           0
-    ## 31 2012-10-31           0
-    ## 32 2012-11-01          NA
-    ## 33 2012-11-02           0
-    ## 34 2012-11-03           0
-    ## 35 2012-11-04          NA
-    ## 36 2012-11-05           0
-    ## 37 2012-11-06           0
-    ## 38 2012-11-07           0
-    ## 39 2012-11-08           0
-    ## 40 2012-11-09          NA
-    ## 41 2012-11-10          NA
-    ## 42 2012-11-11           0
-    ## 43 2012-11-12           0
-    ## 44 2012-11-13           0
-    ## 45 2012-11-14          NA
-    ## 46 2012-11-15           0
-    ## 47 2012-11-16           0
-    ## 48 2012-11-17           0
-    ## 49 2012-11-18           0
-    ## 50 2012-11-19           0
-    ## 51 2012-11-20           0
-    ## 52 2012-11-21           0
-    ## 53 2012-11-22           0
-    ## 54 2012-11-23           0
-    ## 55 2012-11-24           0
-    ## 56 2012-11-25           0
-    ## 57 2012-11-26           0
-    ## 58 2012-11-27           0
-    ## 59 2012-11-28           0
-    ## 60 2012-11-29           0
-    ## 61 2012-11-30          NA
-
-    ## Plot the Graph (Base Plotting System)
-        plot(act_median_by_date$date, act_median_by_date$MedianSteps, 
-                    type="l", xlab="Date", ylab="Median of Steps",
-                    main="Median of Steps taken each Day")
-
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-4-1.png)
-
-### 4. Time series plot of the average number of steps taken
-
-    ## Load plyr Package
+    ## Load plyr, ggplot2 Package
         library(plyr)
         library(ggplot2)
 
     ## Warning: package 'ggplot2' was built under R version 3.2.3
 
-    ## Group by the date and then find the median of the steps
+    ## Group by the interval and then find the mean of the steps
       act_avg_by_interval <- ddply(activitydata, "interval", summarise, mean(steps,na.rm=TRUE))
       colnames(act_avg_by_interval )[2] <- "AverageSteps"
       
     ## Finding the range for interval
         int_range <- range(0,  act_avg_by_interval$interval)
 
-    ## Plot the Graph (Base Plotting System)
+    ## Plot the Graph (ggplot2)
         ThePlot <- qplot(interval, AverageSteps, data=act_avg_by_interval,
               geom="line", method="lm",xlab="Interval", ylab="Average of Steps", 
                     main="Average of Steps taken per interval", xlim=int_range)
@@ -220,7 +76,7 @@
         ## Printing the Plot
         print(ThePlot)
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+![](PA1_template_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 ### 5. The 5-minute interval that, on average, contains the maximum number of steps
 
@@ -235,7 +91,9 @@
     ##     Interval Highest Average Step
     ## 104      835             206.1698
 
-### 6. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+### 6. Code to describe and show a strategy for imputing missing data
+
+### a. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
     act_order <- act_avg_by_interval[order(act_avg_by_interval[,2]),]
 
@@ -244,3 +102,124 @@
     print(thecount)
 
     ## [1] 2304
+
+### b. Strategy for filling in all of the missing values in the dataset. Have used the mean for that 5-minute interval, etc.
+
+    activitydatafilled <- activitydata
+    thetotalCount <- nrow(activitydatafilled)
+
+    for (i in 1:thetotalCount)
+    {
+      if (is.na(activitydatafilled[i,"steps"])==TRUE) 
+        {  
+            activitydatafilled[i,"steps"]<-act_avg_by_interval[which(act_avg_by_interval$interval == activitydatafilled[i,"interval"]),2]  
+      }  
+    }
+
+    thenewcountofNA <- nrow(activitydatafilled[which(is.na(activitydatafilled$steps) == TRUE), ])
+
+    print(thenewcountofNA)
+
+    ## [1] 0
+
+    ## All NAs filled. So the new count of NA displays 0
+
+### 7 (a).Histogram of the total number of steps taken each day - After imputing the missing Values
+
+    ## Load plyr Package
+        library(plyr)
+
+    ## Group by the date and then sum the steps
+      act_sum_by_date_filled <- ddply(activitydatafilled, "date", summarise, TotalStepsFilled=sum(steps))
+
+    ## Plot the histogram 
+        hist(act_sum_by_date_filled$TotalStepsFilled, 
+                    xlab="Total Number of Steps",
+                    main="Histogram of Total No. of Steps taken each Day (With No missing values)")
+
+![](PA1_template_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+
+### 7 (b).Mean and median number of steps taken each day - With No missing Values
+
+    ## Load plyr Package
+        library(plyr)
+
+    ## Use Summary to Calculate the Mean and Median 
+    ## Print the Mean and Median
+      stepssummaryfilled <- summary(act_sum_by_date_filled[,2])
+      stepsmeanfilled <- stepssummaryfilled[4]
+      stepsmedianfilled <- stepssummaryfilled[3]
+      print(stepsmeanfilled)
+
+    ##  Mean 
+    ## 10770
+
+      print(stepsmedianfilled)
+
+    ## Median 
+    ##  10770
+
+### 8. Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+
+    ## Load plyr Package
+        library(plyr)
+
+      thetempframe <- data.frame("daytype")
+      activitydatafilled <- cbind(activitydatafilled,thetempframe)
+      colnames(activitydatafilled )[4] <- "daytype"
+      levels(activitydatafilled$daytype) <- c(levels(activitydatafilled$daytype), "weekday")
+      levels(activitydatafilled$daytype) <- c(levels(activitydatafilled$daytype), "weekend")
+      str(activitydatafilled)
+
+    ## 'data.frame':    17568 obs. of  4 variables:
+    ##  $ steps   : num  1.717 0.3396 0.1321 0.1509 0.0755 ...
+    ##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+    ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+    ##  $ daytype : Factor w/ 3 levels "daytype","weekday",..: 1 1 1 1 1 1 1 1 1 1 ...
+
+      thetotalCount <- nrow(activitydatafilled)
+
+      for (i in 1:thetotalCount)
+      {
+        
+        if (weekdays(as.Date(activitydatafilled[i,"date"], "%Y-%m-%d")) == 
+            "Saturday" | 
+            weekdays(as.Date(activitydatafilled[i,"date"], "%Y-%m-%d")) == 
+            "Sunday") 
+          {  
+              activitydatafilled[i,"daytype"]<-"weekend"
+        }
+        else
+        {
+            activitydatafilled[i,"daytype"]<-"weekday"
+        }
+      }
+      ## The following shows that the daytype has been filled now
+      head(activitydatafilled)
+
+    ##       steps       date interval daytype
+    ## 1 1.7169811 2012-10-01        0 weekday
+    ## 2 0.3396226 2012-10-01        5 weekday
+    ## 3 0.1320755 2012-10-01       10 weekday
+    ## 4 0.1509434 2012-10-01       15 weekday
+    ## 5 0.0754717 2012-10-01       20 weekday
+    ## 6 2.0943396 2012-10-01       25 weekday
+
+        library(plyr)
+        library(ggplot2)
+
+      act_avg_by_interval2 <- ddply(activitydatafilled, .(interval,daytype), summarise, mean(steps,na.rm=TRUE))
+      colnames(act_avg_by_interval2 )[3] <- "AverageSteps"
+      
+    ## Finding the range for interval
+        int_range <- range(0,  act_avg_by_interval2$interval)
+      
+    ## Plot the Graph (ggplot2)
+        ThePlot2 <- qplot(interval, AverageSteps, facets=.~daytype, data=act_avg_by_interval2,
+              geom="line", method="lm",xlab="Interval", ylab="Average of Steps", 
+                    main="Average of Steps taken per interval(Weekday,Weekend)", xlim=int_range)
+        
+        ## Printing the Plot
+        print(ThePlot2)
+
+![](PA1_template_files/figure-markdown_strict/unnamed-chunk-10-1.png)

@@ -1,7 +1,7 @@
 ---
 title: 'Assignment : Course Project 1'
 author: "Manjula T"
-date: "January 10, 2016"
+date: "January 15, 2016 (IST)"
 output: md_document
 ---
 
@@ -18,7 +18,7 @@ if(!file.exists("./data/repdatadataactivity.zip"))  {
 }
 
 if(!file.exists("./data/activity.csv")) {
-	## check and correct the code to unzip
+	## code to unzip
 	unzip("./data/repdatadataactivity.zip", list=FALSE, overwrite=TRUE, exdir=".")
 }
 
@@ -43,56 +43,34 @@ activitydata <- read.csv("./data/activity.csv")
 ```
 
 ### 3.Mean and median number of steps taken each day
-### MEAN
 ```{r, echo=TRUE}
 ## Load plyr Package
 	library(plyr)
 
-## Group by the date and then find mean of the steps
-  act_mean_by_date <- ddply(activitydata, "date", summarise, MeanSteps=mean(steps))
-	
-## Print the means
-  print(act_mean_by_date)
-
-## Plot the Graph (Base Plotting System)
-	plot(act_mean_by_date$date, act_mean_by_date$MeanSteps, 
-				type="l", xlab="Date", ylab="Mean of Steps",
-				main="Mean of Steps taken each Day")
+## Use Summary to Calculate the Mean and Median 
+## Print the Mean and Median
+  stepssummary <- summary(act_sum_by_date[,2])
+  stepsmean <- stepssummary[4]
+  stepsmedian <- stepssummary[3]
+  print(stepsmean)
+  print(stepsmedian)
 
 ```
 
-### MEDIAN
+### 4.Time series plot of the average number of steps taken
 ```{r, echo=TRUE}
-## Load plyr Package
-	library(plyr)
-
-## Group by the date and then find the median of the steps
-  act_median_by_date <- ddply(activitydata, "date", summarise, MedianSteps=median(steps))
-  
-## Print the medians
-  print(act_median_by_date)
-
-## Plot the Graph (Base Plotting System)
-	plot(act_median_by_date$date, act_median_by_date$MedianSteps, 
-				type="l", xlab="Date", ylab="Median of Steps",
-				main="Median of Steps taken each Day")
-
-```
-
-### 4. Time series plot of the average number of steps taken
-```{r, echo=TRUE}
-## Load plyr Package
+## Load plyr, ggplot2 Package
 	library(plyr)
 	library(ggplot2)
 
-## Group by the date and then find the median of the steps
+## Group by the interval and then find the mean of the steps
   act_avg_by_interval <- ddply(activitydata, "interval", summarise, mean(steps,na.rm=TRUE))
   colnames(act_avg_by_interval )[2] <- "AverageSteps"
   
 ## Finding the range for interval
 	int_range <- range(0,  act_avg_by_interval$interval)
 
-## Plot the Graph (Base Plotting System)
+## Plot the Graph (ggplot2)
 	ThePlot <- qplot(interval, AverageSteps, data=act_avg_by_interval,
 	      geom="line", method="lm",xlab="Interval", ylab="Average of Steps", 
 				main="Average of Steps taken per interval", xlim=int_range)
@@ -113,7 +91,8 @@ colnames(act_max )[2] <- "Highest Average Step"
 print(act_max)
 ```
 
-### 6. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
+### 6. Code to describe and show a strategy for imputing missing data
+### a. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 ```{r, echo=TRUE}
 act_order <- act_avg_by_interval[order(act_avg_by_interval[,2]),]
 
@@ -122,3 +101,103 @@ thecount <- nrow(activitydata[which(is.na(activitydata$steps) == TRUE), ])
 print(thecount)
 ```
 
+### b. Strategy for filling in all of the missing values in the dataset. Have used the mean for that 5-minute interval, etc.
+```{r, echo=TRUE}
+
+activitydatafilled <- activitydata
+thetotalCount <- nrow(activitydatafilled)
+
+for (i in 1:thetotalCount)
+{
+  if (is.na(activitydatafilled[i,"steps"])==TRUE) 
+	{  
+     	activitydatafilled[i,"steps"]<-act_avg_by_interval[which(act_avg_by_interval$interval == activitydatafilled[i,"interval"]),2]  
+  }  
+}
+
+thenewcountofNA <- nrow(activitydatafilled[which(is.na(activitydatafilled$steps) == TRUE), ])
+
+print(thenewcountofNA)
+## All NAs filled. So the new count of NA displays 0
+```
+
+### 7 (a).Histogram of the total number of steps taken each day - After imputing the missing Values
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
+
+## Group by the date and then sum the steps
+  act_sum_by_date_filled <- ddply(activitydatafilled, "date", summarise, TotalStepsFilled=sum(steps))
+
+## Plot the histogram 
+	hist(act_sum_by_date_filled$TotalStepsFilled, 
+				xlab="Total Number of Steps",
+				main="Histogram of Total No. of Steps taken each Day (With No missing values)")
+
+```
+
+### 7 (b).Mean and median number of steps taken each day - With No missing Values
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
+
+## Use Summary to Calculate the Mean and Median 
+## Print the Mean and Median
+  stepssummaryfilled <- summary(act_sum_by_date_filled[,2])
+  stepsmeanfilled <- stepssummaryfilled[4]
+  stepsmedianfilled <- stepssummaryfilled[3]
+  print(stepsmeanfilled)
+  print(stepsmedianfilled)
+
+```
+
+### 8. Panel plot comparing the average number of steps taken per 5-minute interval across weekdays and weekends
+```{r, echo=TRUE}
+## Load plyr Package
+	library(plyr)
+
+  thetempframe <- data.frame("daytype")
+  activitydatafilled <- cbind(activitydatafilled,thetempframe)
+  colnames(activitydatafilled )[4] <- "daytype"
+  levels(activitydatafilled$daytype) <- c(levels(activitydatafilled$daytype), "weekday")
+  levels(activitydatafilled$daytype) <- c(levels(activitydatafilled$daytype), "weekend")
+  str(activitydatafilled)
+  
+  thetotalCount <- nrow(activitydatafilled)
+
+  for (i in 1:thetotalCount)
+  {
+    
+    if (weekdays(as.Date(activitydatafilled[i,"date"], "%Y-%m-%d")) == 
+        "Saturday" | 
+        weekdays(as.Date(activitydatafilled[i,"date"], "%Y-%m-%d")) == 
+        "Sunday") 
+	  {  
+     	  activitydatafilled[i,"daytype"]<-"weekend"
+    }
+    else
+    {
+        activitydatafilled[i,"daytype"]<-"weekday"
+    }
+  }
+  ## The following shows that the daytype has been filled now
+  head(activitydatafilled)
+  
+	library(plyr)
+	library(ggplot2)
+
+  act_avg_by_interval2 <- ddply(activitydatafilled, .(interval,daytype), summarise, mean(steps,na.rm=TRUE))
+  colnames(act_avg_by_interval2 )[3] <- "AverageSteps"
+  
+## Finding the range for interval
+	int_range <- range(0,  act_avg_by_interval2$interval)
+  
+## Plot the Graph (ggplot2)
+	ThePlot2 <- qplot(interval, AverageSteps, facets=.~daytype, data=act_avg_by_interval2,
+	      geom="line", method="lm",xlab="Interval", ylab="Average of Steps", 
+				main="Average of Steps taken per interval(Weekday,Weekend)", xlim=int_range)
+	
+	## Printing the Plot
+	print(ThePlot2)
+
+```
